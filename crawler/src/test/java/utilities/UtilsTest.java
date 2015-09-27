@@ -7,10 +7,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -75,5 +72,28 @@ public class UtilsTest {
 
         assertEquals(64808, Utils.getPort(bytes));
     }
+
+    @Test
+    public void testPing() throws IOException {
+        byte[] bytes = Files.toByteArray(new File(getClass().getResource("/ping.bin").getFile()));
+        Map<String,Object> map = Utils.deBencode(bytes);
+
+        System.out.println();
+    }
+
+    @Test
+    public void testGetPeers() throws IOException {
+        byte[] bytes = Files.toByteArray(new File(getClass().getResource("/getPeers.bin").getFile()));
+        Map<String,Object> map = Utils.deBencode(bytes);
+
+        if (Objects.nonNull(map.get("cQ==")) && map.get("cQ==").equals("Z2V0X3BlZXJz")) {
+            Map<String, String> subMap = (Map<String, String>) map.get("YQ==");
+            String infoHash = subMap.get("aW5mb19oYXNo");
+            System.out.println(infoHash);
+
+        }
+        System.out.println();
+    }
+
 
 }

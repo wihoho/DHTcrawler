@@ -6,8 +6,8 @@ import utilities.Utils;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by wihoho on 20/9/15.
@@ -19,22 +19,24 @@ public class Crawler {
         DatagramSocket socket = new DatagramSocket(inetSocketAddress);
 
         String nodeId = Utils.randomId();
-        Queue<Node> nodes = new LinkedList<>();
-        nodes.add(Node.builder().address("router.bittorrent.com").port(6881).build());
-        nodes.add(Node.builder().address("dht.transmissionbt.com").port(6881).build());
-        nodes.add(Node.builder().address("router.utorrent.com").port(6881).build());
-//        nodes.add(Node.builder().address("localhost").port(6882).build());
+        Map<String, Node> nodeMap = new HashMap<>();
+        Node n1 = Node.builder().address("router.bittorrent.com").port(6881).build();
+        Node n2 =Node.builder().address("dht.transmissionbt.com").port(6881).build();
+        Node n3 =Node.builder().address("router.utorrent.com").port(6881).build();
+        nodeMap.put(n1.getAddress(), n1);
+        nodeMap.put(n2.getAddress(), n2);
+        nodeMap.put(n3.getAddress(), n3);
 
         DHTClient dhtClient = DHTClient.builder()
                 .id(nodeId)
                 .socket(socket)
-                .nodes(nodes)
+                .nodeMap(nodeMap)
                 .build();
 
         DHTServer dhtServer = DHTServer.builder()
                 .id(nodeId)
                 .socket(socket)
-                .nodes(nodes)
+                .nodeMap(nodeMap)
                 .build();
 
         Thread client = new Thread(dhtClient);

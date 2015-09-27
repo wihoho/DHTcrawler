@@ -19,10 +19,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by wihoho on 19/9/15.
@@ -75,9 +72,14 @@ public class Utils {
         BencodeInputStream bencode = new BencodeInputStream(in);
 
         Type type = bencode.nextType(); // Returns Type.DICTIONARY
-        Map<String, Object> dict = bencode.readDictionary();
 
-        return dict;
+        try {
+            Map<String, Object> dict = bencode.readDictionary();
+            return dict;
+        } catch (Exception e) {
+            return new HashMap<>();
+        }
+
     }
 
     public static List<Node> decodeNodes(String encodeNodes) throws UnknownHostException {

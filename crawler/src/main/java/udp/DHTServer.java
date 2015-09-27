@@ -9,9 +9,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
+import java.util.Objects;
 
 /**
  * Created by wihoho on 19/9/15.
@@ -22,7 +23,7 @@ import java.util.Queue;
 public class DHTServer implements Runnable {
     private String id;
     private DatagramSocket socket;
-    private Queue<Node> nodes;
+    private Map<String, Node> nodeMap;
 
     @Override
     public void run() {
@@ -62,23 +63,43 @@ public class DHTServer implements Runnable {
 
     public void onMessage(Map<String, Object> map, Node sourceNode) throws UnknownHostException {
         // handle find_nodes response
-        if (map.get("eQ==").equals("cg==")) {
+        if (Objects.nonNull(map.get("eQ==")) && map.get("eQ==").equals("cg==")) {
             Map<String, String> subMap = (Map<String, String>) map.get("cg==");
             if (subMap.containsKey("bm9kZXM=")) {
-                List<Node> decodedNodes = Utils.decodeNodes(subMap.get("bm9kZXM="));
-                if (decodedNodes.isEmpty())
-                    return;
-
-                synchronized (nodes) {
-                    decodedNodes.forEach(
-                            eachNode -> nodes.add(eachNode)
-                    );
-                }
+                onFindNodes(subMap);
             }
 
-        } else if (map.get("y").equals("q")) {
-            String operation = (String) map.get("q");
-            System.out.println(operation);
+        } else if (Objects.nonNull(map.get("cQ==")) && map.get("cQ==").equals("Z2V0X3BlZXJz")) {
+            Map<String, String> subMap = (Map<String, String>) map.get("YQ==");
+            String infoHash = subMap.get("aW5mb19oYXNo");
+            System.out.println(infoHash);
+
         }
     }
+
+    private void onFindNodes(Map<String, String> subMap) throws UnknownHostException {
+        List<Node> decodedNodes = Utils.decodeNodes(subMap.get("bm9kZXM="));
+        if (decodedNodes.isEmpty())
+            return;
+
+        synchronized (nodeMap) {
+            decodedNodes.stream()
+                    .filter(Node::isValid)
+                    .forEach(n -> nodeMap.putIfAbsent(n.getAddress(), n));
+        }
+    }
+
+    private void onPing(Map<String, Object> map, Node sourceNode) {
+        String tId = (String) map.get("dA==");
+        Map<String, Object> pong = new HashMap<>();
+
+//        pong.put("")
+
+
+    }
+
+    private void onGetPeers(Map<String, Object> map) {
+
+    }
+
 }

@@ -12,7 +12,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Queue;
 
 /**
  * Created by wihoho on 19/9/15.
@@ -25,7 +24,7 @@ public class DHTClient implements Runnable {
 
     private String id;
     private DatagramSocket socket;
-    private Queue<Node> nodes;
+    private Map<String, Node> nodeMap;
 
     public void findNode(Node destination) throws IOException {
         Map<String, Object> map = new HashMap<>();
@@ -55,17 +54,20 @@ public class DHTClient implements Runnable {
                 e.printStackTrace();
             }
 
-            synchronized (nodes) {
-                if (nodes.isEmpty()) {
+            synchronized (nodeMap) {
+                if (nodeMap.isEmpty()) {
                     continue;
                 }
 
-                Node currentNode = nodes.poll();
-                try {
-                    findNode(currentNode);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                nodeMap.forEach(
+                        (key, value) -> {
+                            try {
+                                findNode(value);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                );
             }
         }
     }
