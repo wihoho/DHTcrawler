@@ -66,8 +66,9 @@ public class DHTClient implements Runnable {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                        }
-                );
+                        });
+
+                System.out.println("Node size: " + nodeMap.size());
             }
         }
     }
