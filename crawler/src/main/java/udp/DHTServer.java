@@ -137,12 +137,16 @@ public class DHTServer implements Runnable {
 
     }
 
-    private void sendMessage(Map<String, Object> map, Node targetNode) throws IOException {
-        byte[] sendData = Utils.enBencode(map);
+    private void sendMessage(Map<String, Object> map, Node targetNode) {
+        try {
+            byte[] sendData = Utils.enBencode(map);
 
-        InetAddress destinationIp = InetAddress.getByName(targetNode.getAddress());
-        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, destinationIp, targetNode.getPort());
-        socket.send(sendPacket);
+            InetAddress destinationIp = InetAddress.getByName(targetNode.getAddress());
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, destinationIp, targetNode.getPort());
+            socket.send(sendPacket);
+        } catch (Exception e) {
+
+        }
 
     }
 
