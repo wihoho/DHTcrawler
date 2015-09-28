@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by wihoho on 19/9/15.
@@ -26,11 +27,13 @@ public class DHTServer implements Runnable {
     private String id;
     private DatagramSocket socket;
     private Map<String, Node> nodeMap;
+    private AtomicInteger count;
 
     @Override
     public void run() {
         System.out.println("Server starts");
         byte[] receiveData = new byte[65536];
+        count = new AtomicInteger(0);
 
         while (true) {
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
@@ -96,7 +99,7 @@ public class DHTServer implements Runnable {
     }
 
     private void onFindNodesResponse(Map<String, Object> map) throws UnknownHostException {
-        List<Node> decodedNodes = Utils.decodeNodes(((Map<String, String>)(map.get("r"))).get("nodes"));
+        List<Node> decodedNodes = Utils.decodeNodes(((Map<String, String>) (map.get("r"))).get("nodes"));
         if (decodedNodes.isEmpty())
             return;
 
@@ -147,8 +150,9 @@ public class DHTServer implements Runnable {
         if (Objects.nonNull(map.get("q")) && map.get("q").equals("get_peers")) {
             Map<String, String> subMap = (Map<String, String>) map.get("a");
             String infoHash = subMap.get("info_hash");
-            System.out.println(infoHash);
 
+            int countNumber = count.incrementAndGet();
+            System.out.println(countNumber + ":" + infoHash);
 
             // response
             Map<String, Object> responseMap = new HashMap<>();

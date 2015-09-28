@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.experimental.Builder;
 import utilities.Utils;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -26,7 +25,7 @@ public class DHTClient implements Runnable {
     private DatagramSocket socket;
     private Map<String, Node> nodeMap;
 
-    public void findNode(Node destination) throws IOException {
+    public void findNode(Node destination) {
         Map<String, Object> map = new HashMap<>();
         map.put("t", Utils.getRandomString(2));
         map.put("y", "q");
@@ -37,11 +36,15 @@ public class DHTClient implements Runnable {
         subMap.put("target", Utils.randomId());
         map.put("a", subMap);
 
-        byte[] sendData = Utils.enBencode(map);
+        try {
+            byte[] sendData = Utils.enBencode(map);
 
-        InetAddress destinationIp = InetAddress.getByName(destination.getAddress());
-        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, destinationIp, destination.getPort());
-        socket.send(sendPacket);
+            InetAddress destinationIp = InetAddress.getByName(destination.getAddress());
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, destinationIp, destination.getPort());
+            socket.send(sendPacket);
+        } catch (Exception e) {
+
+        }
     }
 
     @Override
@@ -61,11 +64,7 @@ public class DHTClient implements Runnable {
 
                 nodeMap.forEach(
                         (key, value) -> {
-                            try {
-                                findNode(value);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            findNode(value);
                         });
 
                 nodeMap.clear();
