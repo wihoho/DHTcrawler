@@ -69,6 +69,9 @@ public class DHTServer implements Runnable {
     }
 
     public void onMessage(Map<String, Object> map, Node sourceNode) throws IOException {
+        if (Objects.isNull(map.get("y")))
+            return;
+
         // handle find_nodes response
         if (map.get("y").equals("r")) {
             Map<String, String> subMap = (Map<String, String>) map.get("r");
@@ -76,7 +79,7 @@ public class DHTServer implements Runnable {
                 onFindNodesResponse(map);
             }
 
-        } else if (Objects.nonNull(map.get("y")) && map.get("y").equals("q")) {
+        } else if (map.get("y").equals("q")) {
             // handle ping
             switch ((String) map.get("q")) {
                 case "ping":
