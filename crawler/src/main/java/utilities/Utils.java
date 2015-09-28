@@ -1,5 +1,6 @@
 package utilities;
 
+import com.dampcake.bencode.Bencode;
 import com.dampcake.bencode.BencodeInputStream;
 import com.dampcake.bencode.BencodeOutputStream;
 import com.dampcake.bencode.Type;
@@ -7,8 +8,6 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import dto.Node;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
@@ -36,6 +35,26 @@ public class Utils {
         fixedNodes.add(Node.builder().address("router.utorrent.com").port(6881).build());
     }
 
+    public static String getNeighbour(String s1, String s2) {
+        if (StringUtils.isEmpty(s1))
+            return s2;
+
+        byte[] bytes1 = s1.getBytes(Bencode.DEFAULT_CHARSET);
+        byte[] bytes2 = s2.getBytes(Bencode.DEFAULT_CHARSET);
+
+        byte[] newBytes = new byte[20];
+        for(int i = 0; i < 10; i ++) {
+            newBytes[i] = bytes1[i];
+        }
+
+        for(int i = 10; i < 20; i ++) {
+            newBytes[i] = bytes2[i-10];
+        }
+
+        return new String(newBytes, Bencode.DEFAULT_CHARSET);
+
+    }
+
     public static String randomId() {
         String s = getRandomString(10);
         MessageDigest messageDigest = null;
@@ -45,7 +64,7 @@ public class Utils {
             e.printStackTrace();
         }
         messageDigest.update(s.getBytes());
-        return Hex.encodeHexString(messageDigest.digest());
+        return new String(messageDigest.digest(), Bencode.DEFAULT_CHARSET);
     }
 
     public static String getRandomString(int size) {
@@ -88,8 +107,7 @@ public class Utils {
             return result;
         }
 
-
-        byte[] bytes = Base64.decodeBase64(encodeNodes);
+        byte[] bytes = encodeNodes.getBytes(Bencode.DEFAULT_CHARSET);
         int size = bytes.length;
 
         if (size % 26 != 0) {
@@ -105,7 +123,7 @@ public class Utils {
             String ip = InetAddress.getByAddress(currentNodeIp).getHostAddress();
 
             Node n = Node.builder()
-                    .id(Base64.encodeBase64String(currentNodeId))
+                    .id(new String(currentNodeId, Bencode.DEFAULT_CHARSET))
                     .address(ip)
                     .port(port)
                     .build();

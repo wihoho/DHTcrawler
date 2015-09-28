@@ -1,8 +1,8 @@
 package utilities;
 
+import com.dampcake.bencode.Bencode;
 import com.google.common.io.Files;
 import dto.Node;
-import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 
 import java.io.File;
@@ -19,7 +19,7 @@ public class UtilsTest {
     @Test
     public void testRandomId() throws Exception {
         String result = Utils.randomId();
-        assertEquals(20, Hex.decodeHex(result.toCharArray()).length);
+        assertEquals(20, result.getBytes(Bencode.DEFAULT_CHARSET).length);
     }
 
     @Test
@@ -52,10 +52,10 @@ public class UtilsTest {
         Map<String,Object> map = Utils.deBencode(bytes);
 
         List<Node> decodedNodes = new ArrayList<>();
-        if (map.get("eQ==").equals("cg==")) {
-            Map<String, String> subMap = (Map<String, String>) map.get("cg==");
-            if (subMap.containsKey("bm9kZXM=")) {
-                 decodedNodes = Utils.decodeNodes(subMap.get("bm9kZXM="));
+        if (map.get("y").equals("r")) {
+            Map<String, String> subMap = (Map<String, String>) map.get("r");
+            if (subMap.containsKey("nodes")) {
+                 decodedNodes = Utils.decodeNodes(subMap.get("nodes"));
             }
         }
 
@@ -86,13 +86,11 @@ public class UtilsTest {
         byte[] bytes = Files.toByteArray(new File(getClass().getResource("/getPeers.bin").getFile()));
         Map<String,Object> map = Utils.deBencode(bytes);
 
-        if (Objects.nonNull(map.get("cQ==")) && map.get("cQ==").equals("Z2V0X3BlZXJz")) {
-            Map<String, String> subMap = (Map<String, String>) map.get("YQ==");
-            String infoHash = subMap.get("aW5mb19oYXNo");
-            System.out.println(infoHash);
-
+        if (Objects.nonNull(map.get("q")) && map.get("q").equals("get_peers")) {
+            Map<String, String> subMap = (Map<String, String>) map.get("a");
+            String infoHash = subMap.get("info_hash");
+            assertEquals(20, infoHash.getBytes(Bencode.DEFAULT_CHARSET).length);
         }
-        System.out.println();
     }
 
 

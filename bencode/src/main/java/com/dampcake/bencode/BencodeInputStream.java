@@ -15,7 +15,6 @@
  */
 package com.dampcake.bencode;
 
-import org.apache.commons.codec.binary.Base64;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -126,8 +125,8 @@ public class BencodeInputStream extends FilterInputStream {
         byte[] bytes = new byte[length];
         read(bytes);
 
-        return Base64.encodeBase64String(bytes);
-//        return   new String(bytes, getCharset());
+//        return Base64.encodeBase64String(bytes);
+        return   new String(bytes, getCharset());
     }
 
     /**

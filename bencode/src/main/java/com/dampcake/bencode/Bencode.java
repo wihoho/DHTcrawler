@@ -29,7 +29,7 @@ import java.util.Map;
 public final class Bencode {
 
     /** Default Charset used by the Streams */
-    static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    public static final Charset DEFAULT_CHARSET = Charset.forName("ISO-8859-1");
 
     /** Number Marker */
     static final char NUMBER = 'i';

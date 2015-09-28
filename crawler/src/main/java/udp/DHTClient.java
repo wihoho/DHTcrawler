@@ -33,7 +33,7 @@ public class DHTClient implements Runnable {
         map.put("q", "find_node");
 
         Map<String, Object> subMap = new HashMap<>();
-        subMap.put("id", id);
+        subMap.put("id", Utils.getNeighbour(destination.getId(), this.id));
         subMap.put("target", Utils.randomId());
         map.put("a", subMap);
 
@@ -68,8 +68,9 @@ public class DHTClient implements Runnable {
                             }
                         });
 
-                System.out.println("Node size: " + nodeMap.size());
+                nodeMap.clear();
             }
+
         }
     }
 }
