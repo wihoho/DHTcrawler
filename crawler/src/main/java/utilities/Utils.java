@@ -4,11 +4,11 @@ import com.dampcake.bencode.Bencode;
 import com.dampcake.bencode.BencodeInputStream;
 import com.dampcake.bencode.BencodeOutputStream;
 import com.dampcake.bencode.Type;
+import com.google.common.base.Strings;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import dto.Node;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,7 +36,7 @@ public class Utils {
     }
 
     public static String getNeighbour(String s1, String s2) {
-        if (StringUtils.isEmpty(s1))
+        if (Strings.isNullOrEmpty(s1))
             return s2;
 
         byte[] bytes1 = s1.getBytes(Bencode.DEFAULT_CHARSET);
@@ -103,7 +103,7 @@ public class Utils {
 
     public static List<Node> decodeNodes(String encodeNodes) throws UnknownHostException {
         List<Node> result = new ArrayList<>();
-        if (StringUtils.isEmpty(encodeNodes)) {
+        if (Strings.isNullOrEmpty(encodeNodes)) {
             return result;
         }
 

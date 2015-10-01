@@ -1,8 +1,7 @@
 import dto.User;
+import org.lightcouch.CouchDbClient;
+import org.lightcouch.Response;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 public class KunderExample {
     public static void main(String[] args) {
@@ -14,12 +13,11 @@ public class KunderExample {
                 .build();
 
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("cassandra");
-        EntityManager em = emf.createEntityManager();
+        CouchDbClient dbClient = new CouchDbClient();
+        Response response = dbClient.save(user);
 
+        User foo = dbClient.find(User.class, response.getId());
 
-        User user1 = em.find(User.class, "002");
-        em.close();
-        emf.close();
+        dbClient.remove(foo);
     }
 }

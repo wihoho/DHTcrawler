@@ -11,37 +11,7 @@
 
     <artifactId>crawler</artifactId>
 
-    <repositories>
-        <repository>
-            <id>sonatype-nexus</id>
-            <name>Kundera Public Repository</name>
-            <url>https://oss.sonatype.org/content/repositories/releases</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>kundera-missing</id>
-            <name>Kundera Public Missing Resources Repository</name>
-            <url>http://kundera.googlecode.com/svn/maven2/maven-missing-resources</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <dependencies>
-        <dependency>
-            <groupId>com.impetus.kundera.client</groupId>
-            <artifactId>kundera-cassandra</artifactId>
-            <version>3.1</version>
-        </dependency>
         <dependency>
             <groupId>net.seedboxer</groupId>
             <artifactId>bencode</artifactId>
@@ -66,6 +36,18 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lightcouch</groupId>
+            <artifactId>lightcouch</artifactId>
+            <version>0.1.8</version>
         </dependency>
     </dependencies>
 
