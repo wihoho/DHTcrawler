@@ -1,9 +1,12 @@
 package udp;
 
 import com.dampcake.bencode.Bencode;
+import dto.InfoHashDto;
 import dto.Node;
 import lombok.Data;
 import lombok.experimental.Builder;
+import org.lightcouch.CouchDbClient;
+import utilities.UUIDs;
 import utilities.Utils;
 
 import java.io.IOException;
@@ -28,6 +31,8 @@ public class DHTServer implements Runnable {
     private DatagramSocket socket;
     private Map<String, Node> nodeMap;
     private AtomicInteger count;
+
+    private CouchDbClient couchDbClient;
 
     @Override
     public void run() {
@@ -160,6 +165,14 @@ public class DHTServer implements Runnable {
 
             int countNumber = count.incrementAndGet();
             System.out.println(countNumber + ":" + infoHash);
+
+            InfoHashDto infoHashDto = InfoHashDto.builder()
+                    ._id(UUIDs.timeBased())
+                    .infoHash(infoHash)
+                    .ipAddress(sourceNode.getAddress())
+                    .build();
+
+            couchDbClient.save(infoHashDto);
 
             // response
             Map<String, Object> responseMap = new HashMap<>();

@@ -1,4 +1,5 @@
 import dto.Node;
+import org.lightcouch.CouchDbClient;
 import udp.DHTClient;
 import udp.DHTServer;
 import utilities.Utils;
@@ -15,6 +16,8 @@ import java.util.Map;
 public class Crawler {
 
     public static void main(String[] args) throws SocketException {
+        CouchDbClient couchDbClient = new CouchDbClient();
+
         InetSocketAddress inetSocketAddress = new InetSocketAddress("0.0.0.0", 6884);
         DatagramSocket socket = new DatagramSocket(inetSocketAddress);
 
@@ -37,6 +40,7 @@ public class Crawler {
                 .id(nodeId)
                 .socket(socket)
                 .nodeMap(nodeMap)
+                .couchDbClient(couchDbClient)
                 .build();
 
         Thread client = new Thread(dhtClient);
