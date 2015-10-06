@@ -1,5 +1,19 @@
 package utilities;
 
+import dto.Node;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 import com.dampcake.bencode.Bencode;
 import com.dampcake.bencode.BencodeInputStream;
 import com.dampcake.bencode.BencodeOutputStream;
@@ -7,18 +21,6 @@ import com.dampcake.bencode.Type;
 import com.google.common.base.Strings;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import com.google.common.io.Files;
-import dto.Node;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.*;
 
 /**
  * Created by wihoho on 19/9/15.
@@ -85,8 +87,6 @@ public class Utils {
     }
 
     public static Map<String, Object> deBencode(byte[] data) throws IOException {
-        Files.write(data, new File("findNodes"));
-
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         BencodeInputStream bencode = new BencodeInputStream(in);
 

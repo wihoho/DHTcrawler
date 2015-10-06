@@ -1,14 +1,6 @@
 package udp;
 
-import com.dampcake.bencode.Bencode;
-import dto.InfoHashDto;
 import dto.Node;
-import lombok.Data;
-import lombok.experimental.Builder;
-import org.lightcouch.CouchDbClient;
-import utilities.UUIDs;
-import utilities.Utils;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -19,6 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import lombok.Data;
+import lombok.experimental.Builder;
+import utilities.Utils;
+
+import org.lightcouch.CouchDbClient;
+
+import com.dampcake.bencode.Bencode;
 
 /**
  * Created by wihoho on 19/9/15.
@@ -165,14 +164,6 @@ public class DHTServer implements Runnable {
 
             int countNumber = count.incrementAndGet();
             System.out.println(countNumber + ":" + infoHash);
-
-            InfoHashDto infoHashDto = InfoHashDto.builder()
-                    ._id(UUIDs.timeBased())
-                    .infoHash(infoHash)
-                    .ipAddress(sourceNode.getAddress())
-                    .build();
-
-            couchDbClient.save(infoHashDto);
 
             // response
             Map<String, Object> responseMap = new HashMap<>();
